@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login || Register Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="form-container Register-container">
+            <form id="registerForm">
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <div class="infield">
+                    <input type="text" placeholder="Name" id="regName" required/>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="email" placeholder="Email" id="regEmail" required/>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="tel" placeholder="Phone" id="regPhone" required/>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" placeholder="Password" id="regPassword" required/>
+                    <label></label>
+                </div>
+                <button type="submit">Register Now</button>
+                <div id="registerMessage"></div>
+            </form>
+        </div>
+        <div class="form-container log-in-container">
+            <form id="loginForm">
+                <h1>Log In</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your account</span>
+                <div class="infield">
+                    <input type="email" placeholder="Email" id="loginEmail" required/>
+                    <label></label>
+                </div>
+                <div class="infield">
+                    <input type="password" placeholder="Password" id="loginPassword" required/>
+                    <label></label>
+                </div>
+                <a href="#" class="forgot">Forgot your password?</a>
+                <button type="submit">Log In</button>
+                <div id="loginMessage"></div>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button id="loginBtn">Log In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button id="registerBtn">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('registerBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const registerMessage = document.getElementById('registerMessage');
+        const loginMessage = document.getElementById('loginMessage');
+
+        // Panel switching
+        registerBtn.addEventListener('click', () => {
+            container.classList.add('right-panel-active');
+        });
+
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove('right-panel-active');
+        });
+
+        // Register form submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                phone: document.getElementById('regPhone').value,
+                password: document.getElementById('regPassword').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    registerMessage.textContent = 'Registration successful!';
+                    registerMessage.style.color = 'green';
+                    registerForm.reset();
+                    setTimeout(() => {
+                        window.location.href = 'main.html'; // Redirect to main.html
+                    }, 1000);
+                } else {
+                    const errorData = await response.text();
+                    registerMessage.textContent = errorData || 'Registration failed';
+                    registerMessage.style.color = 'red';
+                }
+            } catch (error) {
+                registerMessage.textContent = 'Server error. Please try again.';
+                registerMessage.style.color = 'red';
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
